@@ -1,7 +1,7 @@
 CFLAGS+= -Wall -g
 CFLAGS+= -I/home/stas/programs/engines/Box2D_v2.2.1/
 LDFLAGS+= -L/home/stas/programs/engines/Box2D_v2.2.1/Box2D/ -lBox2D 
-LDFLAGS+= -lSDLmain -lSDL -lGLU -lGL -lfreeimage -lm -lGLEW  -lsfml-window -lsfml-system
+LDFLAGS+= -lSDLmain -lSDL -lGLU -lGL -lfreeimage -lm -lGLEW
 BUILD_DIR = ./build
 SRC_DIR = ./src
 all: opensoldat
