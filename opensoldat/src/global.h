@@ -72,5 +72,5 @@ typedef UQUAD uquad;
 typedef float FLOAT;
 typedef double DOUBLE;
 
-static float worldScale = 50.0f;
+const float worldScale = 50.0f;
 #endif /* GLOBAL_H_ */
