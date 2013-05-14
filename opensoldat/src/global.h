@@ -30,7 +30,6 @@
 #define GLOBAL_H_
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include <SFML/Window.hpp>
 #include <SDL/SDL.h>
 //#include <SDL/SDL_opengl.h>
 #include <glm/glm.hpp>
