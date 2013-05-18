@@ -27,15 +27,12 @@
  either expressed or implied, of the FreeBSD Project.
  */
 
-
-#include "pstate.h"
-
-Pstate::Pstate() {
+Server::Server() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Pstate::~Pstate() {
+Server::~Server() {
 	// TODO Auto-generated destructor stub
 }
 

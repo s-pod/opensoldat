@@ -29,9 +29,11 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 #include "global.h"
+#include "game.h"
 #include "weapon.h"
 #include "map.h"
 class Bullet;
+class Game;
 
 typedef enum playerSTATE {
 	standing = 0,
@@ -54,7 +56,7 @@ typedef enum playerDIRECTION {
 
 class Player {
 public:
-	Player(std::string name, b2World *world, float posX, float posY);
+	Player(std::string name, float posX, float posY, Game *game);
 	virtual ~Player(void);
 	virtual void draw();
 	virtual float getX(void) {
@@ -63,22 +65,34 @@ public:
 	virtual float getY(void) {
 		return playerBody->GetPosition().y;
 	}
+
+	virtual void setMoveRight(bool);
+	virtual void setMoveLeft(bool);
+	virtual void setMoveUp(bool);
+	virtual void setMoveDown(bool);
+
 	virtual void changeState(pSTATE state);
 	virtual void addToWorld();
 	void setSpawnPoint(tagPMS_SPAWNPOINT sp);
 	bool setPrimaryWeap(weapon *weap);
 	bool setSecondaryWeap(weapon *weap);
+	void setShooting(bool shoot);
 	virtual void shoot();
 	b2World *getWorld();
+	Game *getGame();
 	virtual b2Body* getBody();
 	double getAngle();
-	virtual void update();
+	virtual void update(int x, int y);
 private:
 	void init();
 	std::string name;
+	Game *game;
 	b2World *world;
 	b2Body *playerBody;
 	tagPMS_SPAWNPOINT spawn_point;
+
+	bool moveRight, moveDown, moveLeft, moveUp, shooting;
+	GLuint shaderProgram;
 	float health;
 	float jet;
 	float vest;
@@ -94,10 +108,7 @@ private:
 	GLuint p_vao_poly;
 	GLuint p_vbo_poly;
 	float *polygons;
+	int screen_h, screen_w;
 
 };
-
-extern Map *map;
-extern int screen_w, screen_h;
-extern std::vector<Bullet*> *bullets;
 #endif /* PLAYER_H_ */

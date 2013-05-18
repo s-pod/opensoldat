@@ -29,17 +29,15 @@
 #include "bullet.h"
 #include "vehicle.h"
 #include "player.h"
-
-extern GLuint shaderProgram;
-
 Bullet::Bullet(Player *owner) {
 	// TODO Auto-generated constructor stub
 	//create bullet
 	this->owner = owner;
-	force = 80;
-	radius = 0.015f;
+	shaderProgram = owner->getGame()->getShaderProg();
+	force = 60;
+	radius = 0.010f;
 	bullet = NULL;
-	time(&t);
+	time = SDL_GetTicks();
 	init();
 }
 
@@ -137,7 +135,7 @@ void Bullet::addToWorld(float32 x, float32 y) {
 	bulletShape.m_radius = radius;
 
 	b2FixtureDef bulletFixture;
-	bulletFixture.density = 50;
+	bulletFixture.density = 100;
 	bulletFixture.friction = 0.5;
 	bulletFixture.restitution = 0.0;
 	//bulletFixture.filter.groupIndex = 0;
@@ -174,8 +172,8 @@ void Bullet::draw() {
 	glDrawArrays(GL_QUADS, 0, 4);
 }
 
-time_t Bullet::getTime() {
-	return t;
+float Bullet::getTime() {
+	return time;
 }
 
 Bullet::~Bullet() {

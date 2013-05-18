@@ -31,7 +31,9 @@
 #include "global.h"
 
 using namespace std;
-extern GLuint shaderProgram;
+Map::Map(GLuint shaderProgram) :
+		shaderProgram(shaderProgram) {
+}
 Map::~Map() {
 	delete pmap;
 	glDeleteTextures(1, &texture);
@@ -41,7 +43,7 @@ Map::~Map() {
 	glDeleteVertexArrays(1, &map_vao_poly);
 }
 
-void Map::render(glm::mat4 *view) {
+void Map::renderOnBack() {
 	// Clear the screen to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -57,7 +59,6 @@ void Map::render(glm::mat4 *view) {
 	glBindTexture(GL_TEXTURE_2D, 1);
 	glDrawArrays(GL_QUADS, 0, 4);
 	glEnable(GL_BLEND);
-
 
 	//draw scenery on the back
 	for (unsigned int i = 0; i < pmap->prop.size(); i++) {
@@ -90,7 +91,13 @@ void Map::render(glm::mat4 *view) {
 	glBindBuffer(GL_ARRAY_BUFFER, map_vbo_poly);
 	glDrawArrays(GL_TRIANGLES, 0, pmap->polygonCount * 3);
 
+}
+
+void Map::renderOnFront() {
 	//draw scenery on the front
+	glm::mat4 model;
+	GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
 	glBindVertexArray(map_vao_scenery);
 	glBindBuffer(GL_ARRAY_BUFFER, map_vbo_scenery);
 	for (unsigned int i = 0; i < pmap->prop.size(); i++) {

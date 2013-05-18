@@ -26,10 +26,37 @@
  of the authors and should not be interpreted as representing official policies,
  either expressed or implied, of the FreeBSD Project.
  */
-#ifndef SERVER_H_
-#define SERVER_H_
+#ifndef BULLET_H_
+#define BULLET_H_
 
+#include "global.h"
+#include "game.h"
+#include "weapon.h"
+#include "map.h"
 
+class vehicle;
+class Player;
 
+class Bullet {
+public:
+	Bullet(Player * owner);
+	virtual ~Bullet();
+	virtual void draw();
+	virtual void addToWorld(float32 x, float32 y);
+	b2Body * getBody();
+	float getTime();
+//	virtual Player * getOwner();
+private:
+	void init();
+	b2Body *bullet;
+	Player *owner;
+	int force;
+	float radius;
+	GLuint b_vao_poly;
+	GLuint b_vbo_poly;
+	float *polygons;
+	float time;
+	GLuint shaderProgram;
+};
 
-#endif /* SERVER_H_ */
+#endif /* BULLET_H_ */

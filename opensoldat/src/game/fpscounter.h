@@ -26,65 +26,51 @@
  of the authors and should not be interpreted as representing official policies,
  either expressed or implied, of the FreeBSD Project.
  */
-#ifndef VEHICLE_H_
-#define VEHICLE_H_
+
+#ifndef FPSCOUNTER_H
+#define FPSCOUNTER_H
+
 #include "global.h"
-#include "weapon.h"
-#include "map.h"
-#include "player.h"
-class Bullet;
-
-class vehicle {
+#include "gameloop.h"
+/**
+ * Framerate counter.
+ */
+class FpsCounter
+{
 public:
-	vehicle(std::string name, b2World *world, float posX, float posY,
-			Player *driver);
-	~vehicle(void);
-	void draw();
-	float getX(void) {
-		return cart->GetPosition().x;
-	}
-	float getY(void) {
-		return cart->GetPosition().y;
-	}
-	void addToWorld();
-	void setSpawnPoint(tagPMS_SPAWNPOINT sp);
-	bool setPrimaryWeap(weapon *weap);
-	bool setSecondaryWeap(weapon *weap);
-	void shoot();
-	b2World *getWorld();
-	b2RevoluteJoint* getMotor(int n);
-	Player * getDriver();
-	b2Body* getBody();
-	double getAngle();
-	void update();
+
+    /**
+     * Adds a frame to be counted for the last second.
+     */
+    void countFrame();
+
+    /**
+     * Gets the number of frames rendered in the past second.
+     */
+    float getCurrentFps();
+
+    /**
+     * Gets the average of the framerate of the past second, 
+     */
+    float getAverageFps();
+
 private:
-	std::string name;
-	b2World *world;
-	b2Body *playerBody;
-	tagPMS_SPAWNPOINT spawn_point;
-	float health;
-	float jet;
-	float vest;
-	int ammo;
-	int nades;
-	int activeWeap;
-	double angle; //in radians
-	int cur_frame;
 
-	Player *driver;
-	b2Body* cart;
-	b2Body* wheel1;
-	b2Body* wheel2;
-	b2RevoluteJoint* motor1;
-	b2RevoluteJoint* motor2;
+    /**
+     * Internal structure used to record frame data.
+     */
+    struct FrameData
+    {
+        /** The time at which the frame was added */
+        float time;
 
-	float carWidth;
-	float carHeight;
-	float wheelRadius;
+        /** The number of frames rendered in the past second at that time */
+        float fps;
+    };
+
+    /** The list of counted Frames in the last second */
+    std::list<FrameData*> counted;
 
 };
 
-extern Map *map;
-extern int screen_w, screen_h;
-extern std::vector<Bullet*> *bullets;
-#endif /* VEHICLE_H_ */
+#endif

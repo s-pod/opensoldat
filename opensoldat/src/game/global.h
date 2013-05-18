@@ -26,13 +26,53 @@
  of the authors and should not be interpreted as representing official policies,
  either expressed or implied, of the FreeBSD Project.
  */
-#ifndef PSTATE_H_
-#define PSTATE_H_
+#ifndef GLOBAL_H_
+#define GLOBAL_H_
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <SDL/SDL.h>
+//#include <SDL/SDL_opengl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <FreeImage.h>
+#include <iostream>
+#include <Box2D/Box2D.h>
+#include <string>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <string>
+#include <vector>
+#include <map>
+#include <fstream>
+#include <cmath>
+#include <memory>
+#include <ctime>
+#include <list>
 
-class Pstate {
-public:
-	Pstate();
-	virtual ~Pstate();
-};
+// Typedefs
+typedef char CHAR;
+//typedef signed __int8 BYTE;
+typedef char byte;
+typedef unsigned char UBYTE;
+typedef UBYTE ubyte;
+typedef unsigned short WORD;
+typedef WORD word;
+typedef unsigned short USHORT;
+typedef USHORT ushort;
+typedef short SHORT;
+//typedef unsigned __int32 DWORD;
+typedef unsigned char dword;
+typedef int LONG;
+typedef unsigned int ULONG;
+typedef signed long long QUAD;
+typedef QUAD quad;
+typedef unsigned long long UQUAD;
+typedef UQUAD uquad;
+typedef float FLOAT;
+typedef double DOUBLE;
 
-#endif /* PSTATE_H_ */
+
+
+const float worldScale = 50.0f;
+#endif /* GLOBAL_H_ */

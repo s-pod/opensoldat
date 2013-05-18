@@ -386,10 +386,12 @@ inline std::istream& operator>>(std::istream& is, pms& p) {
 
 class Map {
 public:
+	Map(GLuint shaderProgram);
 	~Map();
-	void render(glm::mat4 *view);
+	void renderOnBack();
 	bool load(char filename[]);
 	bool addToWorld(b2World *world);
+	void renderOnFront();
 	std::string getName() {
 		return pmap->name;
 	}
@@ -430,5 +432,6 @@ private:
 	GLuint map_vao_scenery;
 	float *polygons;
 	float *scenery_arr;
+	GLuint shaderProgram;
 };
 #endif

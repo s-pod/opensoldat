@@ -31,11 +31,11 @@
 #include "bullet.h"
 
 #define _USE_MATH_DEFINES
-extern GLuint shaderProgram;
-Player::Player(std::string name, b2World *world, float posX, float posY) {
+Player::Player(std::string name, float posX, float posY, Game *game) {
+	this->game = game;
 	this->name.empty();
 	this->name.append(name);
-	this->world = world;
+	this->world = game->getWorld();
 	this->ammo = 0;
 	this->health = 100;
 	this->activeWeap = 0;
@@ -43,18 +43,22 @@ Player::Player(std::string name, b2World *world, float posX, float posY) {
 	this->vest = 0;
 	this->nades = 0;
 	this->playerBody = NULL;
+	this->shaderProgram = game->getShaderProg();
+	screen_h = game->getScreen_h();
+	screen_w = game->getScreen_w();
 	state = standing;
 	direction = left;
 	cur_frame = 0;
 	angle = 0;
 	height = 0.8f;
 	width = 0.25f;
+	moveRight = moveDown = moveLeft = moveUp = 0;
 	init();
 }
 
 void Player::shoot() {
 	Bullet *b = new Bullet(this);
-	bullets->push_back(b);
+	game->addBullet(b);
 	b->addToWorld(playerBody->GetPosition().x + 1.0f * std::sin(angle),
 			playerBody->GetPosition().y + 1.0f * std::cos(angle));
 }
@@ -71,9 +75,24 @@ b2Body* Player::getBody() {
 	return playerBody;
 }
 
-void Player::update() {
-	int x, y;
-	SDL_GetMouseState(&x, &y);
+void Player::setShooting(bool shoot) {
+	shooting = shoot;
+}
+
+void Player::setMoveRight(bool right) {
+	moveRight = right;
+}
+void Player::setMoveLeft(bool left) {
+	moveLeft = left;
+}
+void Player::setMoveUp(bool up) {
+	moveUp = up;
+}
+void Player::setMoveDown(bool down) {
+	moveDown = down;
+}
+
+void Player::update(int x, int y) {
 	angle = std::atan2((double) ((double) -screen_w / 2 + x),
 			(double) ((double) screen_h / 2 - y));
 	if (std::sin(angle) < 0) {
@@ -83,8 +102,28 @@ void Player::update() {
 		direction = right;
 		//std::cout << "right" << std::endl;
 	}
+	if (moveLeft) {
+		playerBody->ApplyForce(b2Vec2(-100.0f, 0.0f), b2Vec2(getX(), getY()));
+		if (playerBody->GetLinearVelocity().x <= -10.0f) {
+			playerBody->SetLinearVelocity(
+					b2Vec2(-10.0f, playerBody->GetLinearVelocity().y));
+		}
+	}
+	if (moveRight) {
+		playerBody->ApplyForce(b2Vec2(100.0f, 0.0f), b2Vec2(getX(), getY()));
+		if (playerBody->GetLinearVelocity().x >= 10.0f) {
+			playerBody->SetLinearVelocity(
+					b2Vec2(10.0f, playerBody->GetLinearVelocity().y));
+		}
+	}
+	if (moveUp) {
+		playerBody->SetBullet(true);
+		playerBody->ApplyForce(b2Vec2(0, 100.0f), b2Vec2(getX(), getY()));
+	}
+	if (shooting) {
+		shoot();
+	}
 }
-
 void Player::init() {
 	//TODO: player textures
 
@@ -222,6 +261,10 @@ void Player::addToWorld() {
 
 	playerBody->CreateFixture(&playerFixture);
 
+}
+
+Game *Player::getGame() {
+	return game;
 }
 
 Player::~Player() {

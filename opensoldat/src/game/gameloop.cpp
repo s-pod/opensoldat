@@ -26,36 +26,56 @@
  of the authors and should not be interpreted as representing official policies,
  either expressed or implied, of the FreeBSD Project.
  */
-#ifndef BULLET_H_
-#define BULLET_H_
+#include "gameloop.h"
 
-#include "global.h"
+float getTime() {
+	return static_cast<float>(SDL_GetTicks()) / 1000.0f;
+}
 
-#include "weapon.h"
-#include "map.h"
+float getTimeSince(float& startTime, bool updateStart) {
+	const float newTime = getTime();
+	float diff = newTime - startTime;
+	if (updateStart) {
+		startTime = newTime;
+	}
+	return diff;
+}
 
-class vehicle;
-class Player;
+void delay(float seconds) {
+	SDL_Delay(static_cast<int>(ceil(seconds * 1000.0f)));
+}
 
-class Bullet {
-public:
-	Bullet(Player * owner);
-	virtual ~Bullet();
-	virtual void draw();
-	virtual void addToWorld(float32 x, float32 y);
-	b2Body * getBody();
-	time_t getTime();
-//	virtual Player * getOwner();
-private:
-	void init();
-	b2Body *bullet;
-	Player *owner;
-	int force;
-	float radius;
-	GLuint b_vao_poly;
-	GLuint b_vbo_poly;
-	float *polygons;
-	time_t t;
-};
+GameLoop::GameLoop(float stateFps, bool limitFps) :
+		dt(1.0f / stateFps), stateFps(stateFps), limitFps(limitFps) {
+}
 
-#endif /* BULLET_H_ */
+void GameLoop::runLoop() {
+	float currentTime = getTime();
+	printf("current time: %f",currentTime);
+	float frameTimeLeft = 0.0f;
+	while (continueLoop()) {
+		frameTimeLeft -= getTimeSince(currentTime, true);
+		float physicsFrames = 0.0f;
+		while (frameTimeLeft <= 0.0f) {
+			frameTimeLeft += dt;
+			physicsFrames += 1.0f;
+		}
+		update(dt, physicsFrames);
+		float timeLeft = frameTimeLeft - getTimeSince(currentTime, false);
+		if (limitFps) {
+			if (timeLeft > 0.0f) {
+				render(1.0f);
+			}
+			timeLeft = frameTimeLeft - getTimeSince(currentTime, false);
+			if (timeLeft > 0.0f) {
+				delay(timeLeft);
+			}
+		} else {
+//			while (timeLeft > 0.0f) {
+//				render(1.0f - (timeLeft / dt));
+//				timeLeft = frameTimeLeft - getTimeSince(currentTime, false);
+//			}
+		}
+	}
+}
+GameLoop::~GameLoop(){}
