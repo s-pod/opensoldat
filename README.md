@@ -14,6 +14,6 @@ DEPENDENCIES:
 -  freeimage - http://freeimage.sourceforge.net/
 
 In order to successfully compile and build this project you have<br>
-to install all those dependencies and alter makefile accordingly.
+to install all those dependencies and alter "src/game/makefile" accordingly.
 
 Have fun. 
