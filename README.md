@@ -13,7 +13,7 @@ DEPENDENCIES:
 -  Glm - OpenGL Mathematics http://glm.g-truc.net/
 -  freeimage - http://freeimage.sourceforge.net/
 
-In order to successfully compile and build this project you have<br>
+In order to successfully compile and build this project you have
 to install all those dependencies and alter "src/game/makefile" accordingly.
 
 Have fun. 
